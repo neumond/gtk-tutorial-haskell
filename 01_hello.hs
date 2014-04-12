@@ -1,17 +1,12 @@
 import Graphics.UI.Gtk
-import Control.Monad.Trans(liftIO)
 
 main :: IO()
 
-deleteEventHandler = do
-    putStrLn "Delete event occured"
-    mainQuit
-    return False
-
 main = do
     initGUI
-    window <- windowNew
-    button <- buttonNewWithLabel "Hello world!"
-    on window deleteEvent $ liftIO deleteEventHandler
-    widgetShowAll window
+    window <- windowNew  -- GTK_WINDOW_TOPLEVEL included
+    widgetShow window
     mainGUI
+
+-- You should kill app using shell
+-- killall ghc
