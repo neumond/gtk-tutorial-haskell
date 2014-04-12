@@ -3,6 +3,9 @@ import Control.Monad.Trans(liftIO)
 
 main :: IO()
 
+helloClick = do
+    putStrLn "Hello World!"
+
 deleteEventHandler = do
     putStrLn "Delete event occured"
     return True
@@ -10,18 +13,23 @@ deleteEventHandler = do
 destroyEventHandler = do
     mainQuit
 
-helloClick = do
-    putStrLn "Hello World!"
-
 main = do
     initGUI
     window <- windowNew
     on window deleteEvent $ liftIO deleteEventHandler
-    on window objectDestroy $ destroyEventHandler
+    on window objectDestroy $ destroyEventHandler  -- objectDestroy instead of destroyEvent!
     containerSetBorderWidth window 10
     button <- buttonNewWithLabel "Hello world"
+
     on button buttonActivated $ helloClick
+    -- buttonActivated not in deprecated, checks "clicked"
+
     on button buttonActivated $ widgetDestroy window
     containerAdd window button
-    widgetShowAll window
+
+    widgetShow button
+    widgetShow window
+    -- you can use just
+    -- widgetShowAll window
+
     mainGUI
