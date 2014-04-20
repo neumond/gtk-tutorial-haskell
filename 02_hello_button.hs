@@ -18,7 +18,7 @@ main = do
     window <- windowNew
     on window deleteEvent $ liftIO deleteEventHandler
     on window objectDestroy $ destroyEventHandler  -- objectDestroy instead of destroyEvent!
-    containerSetBorderWidth window 10
+    set window [containerBorderWidth := 10]
     button <- buttonNewWithLabel "Hello world"
 
     on button buttonActivated $ helloClick

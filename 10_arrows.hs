@@ -1,5 +1,4 @@
 import Graphics.UI.Gtk
-import Control.Monad.Trans(liftIO)
 
 createArrowButton arrowType shadowType = do
     button <- buttonNew
@@ -13,12 +12,11 @@ main :: IO()
 main = do
     initGUI
     window <- windowNew
-    windowSetTitle window "Arrow Buttons"
     on window objectDestroy mainQuit
-    containerSetBorderWidth window 10
+    set window [windowTitle := "Arrow Buttons", containerBorderWidth := 10]
 
     box <- hBoxNew False 0
-    containerSetBorderWidth box 2
+    set box [containerBorderWidth := 2]
     containerAdd window box
     widgetShow box
 

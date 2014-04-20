@@ -12,15 +12,14 @@ main = do
 
     window <- windowNew
     on window deleteEvent $ liftIO deleteEventHandler
-    windowSetTitle window "radio buttons"
-    containerSetBorderWidth window 0
+    set window [windowTitle := "radio buttons", containerBorderWidth := 0]
 
     box1 <- vBoxNew False 0
     containerAdd window box1
     widgetShow box1
 
     box2 <- vBoxNew False 10
-    containerSetBorderWidth box2 10
+    set box2 [containerBorderWidth := 10]
     boxPackStart box1 box2 PackGrow 0
     widgetShow box2
 
@@ -31,8 +30,8 @@ main = do
     -- it cannot be done as in tutorial here
     group <- radioButtonGetGroup button
     button <- radioButtonNewWithLabel "button2"
-    radioButtonSetGroup button (head group)  -- separate setting of group
-    toggleButtonSetActive button True
+    -- separate setting of group
+    set button [radioButtonGroup := head group, toggleButtonActive := True]
     boxPackStart box2 button PackGrow 0
     widgetShow button
 
@@ -45,7 +44,7 @@ main = do
     widgetShow separator
 
     box2 <- vBoxNew False 10
-    containerSetBorderWidth box2 10
+    set box2 [containerBorderWidth := 10]
     boxPackStart box1 box2 PackNatural 0
     widgetShow box2
 

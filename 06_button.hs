@@ -4,7 +4,7 @@ import Control.Monad.Trans(liftIO)
 xpmLabelBox :: String -> String -> IO HBox
 xpmLabelBox xpmFilename labelText = do
     box <- hBoxNew False 0
-    containerSetBorderWidth box 2
+    set box [containerBorderWidth := 2]
 
     image <- imageNewFromFile xpmFilename
     label <- labelNew $ Just labelText
@@ -32,10 +32,9 @@ main = do
     initGUI
 
     window <- windowNew
-    windowSetTitle window "Pixmap'd Buttons!"
     on window deleteEvent $ liftIO deleteEventHandler
     on window objectDestroy $ mainQuit
-    containerSetBorderWidth window 10
+    set window [containerBorderWidth := 10, windowTitle := "Pixmap'd Buttons!"]
 
     button <- buttonNew
     on button buttonActivated $ helloAgainCallback "cool button"

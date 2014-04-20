@@ -1,22 +1,20 @@
 import Graphics.UI.Gtk
-import Control.Monad.Trans(liftIO)
-
 
 cbPosMenuSelect :: (ScaleClass s1, ScaleClass s2) => s1 -> s2 -> PositionType -> IO ()
 cbPosMenuSelect hScale vScale pos = do
-    scaleSetValuePos hScale pos
-    scaleSetValuePos vScale pos
+    set hScale [scaleValuePos := pos]
+    set vScale [scaleValuePos := pos]
 
 cbUpdateMenuSelect :: (RangeClass s1, RangeClass s2) => s1 -> s2 -> UpdateType -> IO ()
 cbUpdateMenuSelect hScale vScale policy = do
-    rangeSetUpdatePolicy hScale policy
-    rangeSetUpdatePolicy vScale policy
+    set hScale [rangeUpdatePolicy := policy]
+    set vScale [rangeUpdatePolicy := policy]
 
 cbDigitsScale hScale vScale adj = do
     v <- adjustmentGetValue adj
     let i = truncate v
-    scaleSetDigits hScale i
-    scaleSetDigits vScale i
+    set hScale [scaleDigits := i]
+    set vScale [scaleDigits := i]
 
 clampValue v lo up
     | v < lo = lo
@@ -25,20 +23,19 @@ clampValue v lo up
 
 cbPageSize :: Adjustment -> Adjustment -> IO ()
 cbPageSize getAdj setAdj = do
-    v <- adjustmentGetValue getAdj
-    adjustmentSetPageSize setAdj v
-    adjustmentSetPageIncrement setAdj v
-    value <- adjustmentGetValue setAdj
-    lower <- adjustmentGetLower setAdj
-    upper <- adjustmentGetUpper setAdj
-    pageSize <- adjustmentGetPageSize setAdj
-    adjustmentSetValue setAdj $ clampValue value lower (upper - pageSize)
+    v <- get getAdj adjustmentValue
+    set setAdj [adjustmentPageSize := v, adjustmentPageIncrement := v]
+    value <- get setAdj adjustmentValue
+    lower <- get setAdj adjustmentLower
+    upper <- get setAdj adjustmentUpper
+    pageSize <- get setAdj adjustmentPageSize
+    set setAdj [adjustmentValue := clampValue value lower (upper - pageSize)]
     adjustmentAdjChanged setAdj
 
 cbDrawValue hScale vScale button = do
-    a <- toggleButtonGetActive button
-    scaleSetDrawValue hScale a
-    scaleSetDrawValue vScale a
+    a <- get button toggleButtonActive
+    set hScale [scaleDrawValue := a]
+    set vScale [scaleDrawValue := a]
 
 makeMenuItem :: String -> IO () -> IO MenuItem
 makeMenuItem name callback = do
@@ -48,10 +45,10 @@ makeMenuItem name callback = do
     return item
 
 scaleSetDefaultValues scale = do
-    rangeSetUpdatePolicy scale UpdateContinuous
-    scaleSetDigits scale 1
-    scaleSetValuePos scale PosTop
-    scaleSetDrawValue scale True
+    set scale [rangeUpdatePolicy := UpdateContinuous,
+               scaleDigits := 1,
+               scaleValuePos := PosTop,
+               scaleDrawValue := True]
 
 deleteEventHandler = do
     mainQuit
@@ -60,14 +57,14 @@ deleteEventHandler = do
 createRangeControls = do
     window <- windowNew
     on window objectDestroy mainQuit
-    windowSetTitle window "range controls"
+    set window [windowTitle := "range controls"]
 
     box1 <- vBoxNew False 0
     containerAdd window box1
     widgetShow box1
 
     box2 <- hBoxNew False 10
-    containerSetBorderWidth box2 10
+    set box2 [containerBorderWidth := 10]
     boxPackStart box1 box2 PackGrow 0
     widgetShow box2
 
@@ -89,23 +86,23 @@ createRangeControls = do
     widgetShow hscale
 
     scrollbar <- hScrollbarNew adj1
-    rangeSetUpdatePolicy scrollbar UpdateContinuous
+    set scrollbar [rangeUpdatePolicy := UpdateContinuous]
     boxPackStart box3 scrollbar PackGrow 0
     widgetShow scrollbar
 
     box2 <- hBoxNew False 10
-    containerSetBorderWidth box2 10
+    set box2 [containerBorderWidth := 10]
     boxPackStart box1 box2 PackGrow 0
     widgetShow box2
 
     button <- checkButtonNewWithLabel "Display value on scale widgets"
-    toggleButtonSetActive button True
+    set button [toggleButtonActive := True]
     on button toggled $ cbDrawValue hscale vscale button
     boxPackStart box2 button PackGrow 0
     widgetShow button
 
     box2 <- hBoxNew False 10
-    containerSetBorderWidth box2 10
+    set box2 [containerBorderWidth := 10]
 
     label <- labelNew (Just "Scale Value Position:")
     boxPackStart box2 label PackNatural 0
@@ -131,7 +128,7 @@ createRangeControls = do
     widgetShow box2
 
     box2 <- hBoxNew False 10
-    containerSetBorderWidth box2 10
+    set box2 [containerBorderWidth := 10]
 
     label <- labelNew (Just "Scale Update Policy:")
     boxPackStart box2 label PackNatural 0
@@ -155,7 +152,7 @@ createRangeControls = do
     widgetShow box2
 
     box2 <- hBoxNew False 10
-    containerSetBorderWidth box2 10
+    set box2 [containerBorderWidth := 10]
 
     label <- labelNew (Just "Scale Digits:")
     boxPackStart box2 label PackNatural 0
@@ -165,7 +162,7 @@ createRangeControls = do
     -- 0.12.4 only old-style signals here
     onValueChanged adj2 $ cbDigitsScale hscale vscale adj2
     scale <- hScaleNew adj2
-    scaleSetDigits scale 0
+    set scale [scaleDigits := 0]
     boxPackStart box2 scale PackGrow 0
     widgetShow scale
 
@@ -173,7 +170,7 @@ createRangeControls = do
     widgetShow box2
 
     box2 <- hBoxNew False 10
-    containerSetBorderWidth box2 10
+    set box2 [containerBorderWidth := 10]
 
     label <- labelNew (Just "Scrollbar Page Size:")
     boxPackStart box2 label PackNatural 0
@@ -183,7 +180,7 @@ createRangeControls = do
     -- 0.12.4 only old-style signals here
     onValueChanged adj2 $ cbPageSize adj2 adj1
     scale <- hScaleNew adj2
-    scaleSetDigits scale 0
+    set scale [scaleDigits := 0]
     boxPackStart box2 scale PackGrow 0
     widgetShow scale
 
@@ -195,7 +192,7 @@ createRangeControls = do
     widgetShow separator
 
     box2 <- vBoxNew False 10
-    containerSetBorderWidth box2 10
+    set box2 [containerBorderWidth := 10]
     boxPackStart box1 box2 PackNatural 0
     widgetShow box2
     

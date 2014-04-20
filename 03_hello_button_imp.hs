@@ -13,9 +13,8 @@ deleteEventHandler = do
 main = do
     initGUI
     window <- windowNew
-    windowSetTitle window "Hello Buttons!"
     on window deleteEvent $ liftIO deleteEventHandler
-    containerSetBorderWidth window 10
+    set window [containerBorderWidth := 10, windowTitle := "Hello Buttons!"]
 
     box1 <- hBoxNew False 0
     containerAdd window box1

@@ -49,7 +49,7 @@ main = do
 
     window <- windowNew
     on window deleteEvent $ liftIO deleteEventHandler
-    containerSetBorderWidth window 10
+    set window [containerBorderWidth := 10]
 
     box1 <- vBoxNew False 0
 
@@ -57,7 +57,7 @@ main = do
         1 -> do
             -- label can be empty (Nothing)
             label <- labelNew $ Just "gtk_hbox_new (FALSE, 0);"
-            miscSetAlignment label 0 0
+            set label [miscXalign := 0, miscYalign := 0]
             boxPackStart box1 label PackNatural 0
             widgetShow label
 
@@ -78,7 +78,7 @@ main = do
             widgetShow separator
 
             label <- labelNew $ Just "gtk_hbox_new (TRUE, 0);"
-            miscSetAlignment label 0 0
+            set label [miscXalign := 0, miscYalign := 0]
             boxPackStart box1 label PackNatural 0
             widgetShow label
 
@@ -95,7 +95,7 @@ main = do
             widgetShow separator
         2 -> do
             label <- labelNew $ Just "gtk_hbox_new (FALSE, 10);"
-            miscSetAlignment label 0 0
+            set label [miscXalign := 0, miscYalign := 0]
             boxPackStart box1 label PackNatural 0
             widgetShow label
 
@@ -112,7 +112,7 @@ main = do
             widgetShow separator
 
             label <- labelNew $ Just "gtk_hbox_new (FALSE, 0);"
-            miscSetAlignment label 0 0
+            set label [miscXalign := 0, miscYalign := 0]
             boxPackStart box1 label PackNatural 0
             widgetShow label
 

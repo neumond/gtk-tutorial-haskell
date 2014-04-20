@@ -15,8 +15,7 @@ main = do
     window <- windowNew
     windowSetTitle window "Table"
     on window deleteEvent $ liftIO deleteEventHandler
-    containerSetBorderWidth window 20
-
+    set window [containerBorderWidth := 20]
 
     table <- tableNew 2 2 True
     containerAdd window table

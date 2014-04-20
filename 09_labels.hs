@@ -1,5 +1,4 @@
 import Graphics.UI.Gtk
-import Control.Monad.Trans(liftIO)
 
 main :: IO()
 main = do
@@ -7,37 +6,37 @@ main = do
 
     window <- windowNew
     on window objectDestroy mainQuit
-    windowSetTitle window "Label"
+    set window [windowTitle := "Label"]
 
     vbox <- vBoxNew False 5
     hbox <- hBoxNew False 5
     containerAdd window hbox
     boxPackStart hbox vbox PackNatural 0
-    containerSetBorderWidth window 5
+    set window [containerBorderWidth := 5]
 
     frame <- frameNew
-    frameSetLabel frame "Normal Label"
+    set frame [frameLabel := "Normal Label"]
     label <- labelNew (Just "This is a Normal label")
     containerAdd frame label
     boxPackStart vbox frame PackNatural 0
 
     frame <- frameNew
-    frameSetLabel frame "Multi-line Label"
+    set frame [frameLabel := "Multi-line Label"]
     label <- labelNew (Just "This is a Multi-line label.\nSecond line\nThird line")
     containerAdd frame label
     boxPackStart vbox frame PackNatural 0
 
     frame <- frameNew
-    frameSetLabel frame "Left Justified Label"
+    set frame [frameLabel := "Left Justified Label"]
     label <- labelNew (Just "This is a Left-Justified\nMulti-line label.\nThird      line")
-    labelSetJustify label JustifyLeft
+    set label [labelJustify := JustifyLeft]
     containerAdd frame label
     boxPackStart vbox frame PackNatural 0
 
     frame <- frameNew
-    frameSetLabel frame "Right Justified Label"
+    set frame [frameLabel := "Right Justified Label"]
     label <- labelNew (Just "This is a Right-Justified\nMulti-line label.\nFourth line, (j/k)")
-    labelSetJustify label JustifyRight
+    set label [labelJustify := JustifyRight]
     containerAdd frame label
     boxPackStart vbox frame PackNatural 0
 
@@ -45,7 +44,7 @@ main = do
     vbox <- vBoxNew False 5
     boxPackStart hbox vbox PackNatural 0
     frame <- frameNew
-    frameSetLabel frame "Line wrapped label"
+    set frame [frameLabel := "Line wrapped label"]
     label <- labelNew (Just "This is an example of a line-wrapped label.  It \
         \should not be taking up the entire             \
         \width allocated to it, but automatically \
@@ -56,12 +55,12 @@ main = do
         \     It supports multiple paragraphs correctly, \
         \and  correctly   adds \
         \many          extra  spaces. ")
-    labelSetLineWrap label True
+    set label [labelLineWrap := True]
     containerAdd frame label
     boxPackStart vbox frame PackNatural 0
 
     frame <- frameNew
-    frameSetLabel frame "Filled, wrapped label"
+    set frame [frameLabel := "Filled, wrapped label"]
     label <- labelNew (Just "This is an example of a line-wrapped, filled label.  \
         \It should be taking \
         \up the entire              width allocated to it.  \
@@ -72,16 +71,16 @@ main = do
         \    This is another newer, longer, better \
         \paragraph.  It is coming to an end, \
         \unfortunately.")
-    labelSetJustify label JustifyFill
-    labelSetLineWrap label True
+    set label [labelJustify := JustifyFill,
+               labelLineWrap := True]
     containerAdd frame label
     boxPackStart vbox frame PackNatural 0
 
     frame <- frameNew
-    frameSetLabel frame "Underlined label"
+    set frame [frameLabel := "Underlined label"]
     label <- labelNew (Just "This label is underlined!\n\
         \This one is underlined in quite a funky fashion")
-    labelSetJustify label JustifyLeft
+    set label [labelJustify := JustifyLeft]
     -- 25 _, then 1 space, then 1 _, then 1 space, etc
     labelSetPattern label [25,1,1,1,9,1,1,1,6,5,2,1,7,1,3]
     -- TODO: underlining not working

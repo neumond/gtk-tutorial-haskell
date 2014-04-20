@@ -1,32 +1,32 @@
 import Graphics.UI.Gtk
 
 progressTimeout check bar = do
-    a <- toggleButtonGetActive check
+    a <- get check toggleButtonActive
     if a then do
         progressBarPulse bar
     else do
-        newVal <- progressBarGetFraction bar
+        newVal <- get bar progressBarFraction
         let newVal2 = newVal + 0.01
         let newVal3 = if newVal2 > 1 then 0 else newVal2
-        progressBarSetFraction bar newVal3
+        set bar [progressBarFraction := newVal3]
     return True
 
 toggleShowText bar = do
-    text <- progressBarGetText bar
+    text <- get bar progressBarText
     let text2 = if text == Nothing || text == Just "" then "some text" else ""
-    progressBarSetText bar text2
+    set bar [progressBarText := text2]
 
 toggleActivityMode check bar = do
-    a <- toggleButtonGetActive check
+    a <- get check toggleButtonActive
     if a then do
         progressBarPulse bar
     else do
-        progressBarSetFraction bar 0
+        set bar [progressBarFraction := 0]
 
 toggleOrientation bar = do
-    o <- progressBarGetOrientation bar
+    o <- get bar progressBarOrientation
     let o2 = if o == ProgressLeftToRight then ProgressRightToLeft else ProgressLeftToRight
-    progressBarSetOrientation bar o2
+    set bar [progressBarOrientation := o2]
 
 destroyProgress timer = do
     timeoutRemove timer
@@ -36,12 +36,12 @@ main :: IO()
 main = do
     initGUI
     window <- windowNew
-    windowSetResizable window True
-    windowSetTitle window "GtkProgressBar"
-    containerSetBorderWidth window 0
+    set window [windowTitle := "GtkProgressBar",
+                containerBorderWidth := 0,
+                windowResizable := True]
 
     vbox <- vBoxNew False 5
-    containerSetBorderWidth vbox 10
+    set vbox [containerBorderWidth := 10]
     containerAdd window vbox
     widgetShow vbox
 
